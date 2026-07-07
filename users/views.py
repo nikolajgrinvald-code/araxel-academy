@@ -65,7 +65,7 @@ def dashboard(request):
     if request.user.role == 'admin':
         return redirect('admin_dashboard')
     student = request.user
-    accesses = student.enrollments.select_related('course').all()
+    accesses = student.course_enrollments.select_related('course').all()
     return render(request, 'dashboard.html', {'student': student, 'accesses': accesses})
 
 

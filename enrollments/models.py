@@ -8,13 +8,13 @@ class Enrollment(models.Model):
     DISABLED = 'disabled'
     STATUS_CHOICES = ((ACTIVE, 'Активен'), (DISABLED, 'Отключён'))
 
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
     student = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='enrollments',
+        related_name='course_enrollments',
         limit_choices_to={'role': User.ROLE_STUDENT},
     )
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='enrollments')
     access_status = models.CharField('Доступ', max_length=20, choices=STATUS_CHOICES, default=ACTIVE)
     created_at = models.DateTimeField(auto_now_add=True)
 
