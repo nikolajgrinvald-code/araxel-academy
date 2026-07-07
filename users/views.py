@@ -20,7 +20,7 @@ def register_view(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     if request.method == 'POST':
-        from .forms import RegisterForm, LoginForm
+        from .forms import RegisterForm
         form = RegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
@@ -28,8 +28,8 @@ def register_view(request):
             messages.success(request, 'Регистрация завершена.')
             return redirect('dashboard')
     else:
-        from .forms import RegisterForm, LoginForm
-        form = LoginForm()
+        from .forms import RegisterForm
+        form = RegisterForm()
     return render(request, 'register.html', {'form': form})
 
 
