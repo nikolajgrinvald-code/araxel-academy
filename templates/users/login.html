@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="min-height:70vh;display:flex;align-items:center;justify-content:center;padding:24px 18px">
+  <div class="auth-card" style="width:100%;max-width:460px;padding:26px 28px">
+    <div class="brand" style="font-size:1.6rem">Вход в академию</div>
+    <p class="muted" style="margin-top:6px">Введите данные для доступа к обучению.</p>
+
+    <form method="post" style="margin-top:18px">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div>
+          <label>Email</label>
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
+        <div>
+          <label>Пароль</label>
+          {{ form.password }}
+          {{ form.password.errors }}
+        </div>
+        <button class="btn" type="submit" style="width:100%">Войти</button>
+      </div>
+    </form>
+
+    <p class="muted" style="margin-top:14px;text-align:center">
+      Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

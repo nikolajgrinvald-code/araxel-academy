@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="brand" style="font-size:1.8rem">Мои практики</h1>
+<p class="muted">Искусство и задания, опубликованные в академии.</p>
+
+<div class="list-grid" style="margin-top:22px">
+  {% for s in submissions %}
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;gap:14px;align-items:flex-start;flex-wrap:wrap">
+        <div>
+          <div class="brand" style="font-size:1.1rem">{{ s.lesson.title }}</div>
+          <p class="muted">{{ s.lesson.course.title }}</p>
+        </div>
+        <span class="badge">{{ s.get_status_display }}</span>
+      </div>
+      <p class="muted" style="margin-top:10px">Отправлено: {{ s.submitted_at|date:'d.m.Y H:i' }}</p>
+      {% if s.admin_comment %}
+        <div class="glass" style="margin-top:12px;padding:12px">
+          <div class="brand" style="font-size:1rem">Комментарий администратора</div>
+          <p class="muted" style="margin-top:6px">{{ s.admin_comment }}</p>
+        </div>
+      {% endif %}
+    </div>
+  {% empty %}
+    <div class="muted">Пока нет отправок.</div>
+  {% endfor %}
+</div>
+{% endblock %}

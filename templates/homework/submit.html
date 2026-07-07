@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="max-width:860px;margin:0 auto">
+  <div class="brand" style="font-size:1.6rem">Отправить ответ</div>
+  <p class="muted" style="margin-top:6px">Задание: {{ submission.lesson.title }}</p>
+
+  <form method="post" enctype="multipart/form-data" style="margin-top:18px">
+    {% csrf_token %}
+    <label>Текст ответа</label>
+    <textarea name="answer_text" rows="6" placeholder="Напишите ответ..." class="input">{{ submission.answer_text|default:'' }}</textarea>
+
+    <label style="margin-top:14px">Файл</label>
+    <input type="file" name="file" class="input">
+
+    <button class="btn" style="margin-top:18px;width:100%" type="submit">Отправить</button>
+  </form>
+</div>
+{% endblock %}

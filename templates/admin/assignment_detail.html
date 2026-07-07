@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="glass" style="padding:22px;border-radius:16px">
+  <h1 class="brand" style="font-size:1.8rem;margin:0 0 12px">Задание</h1>
+  <p class="muted">{{ item.student }} → {{ item.lesson }}</p>
+
+  <div class="card" style="margin-top:16px;padding:16px">
+    <div class="brand" style="font-size:1.15rem">Ответ студента</div>
+    {% if item.answer_text %}
+      <p style="margin-top:10px;white-space:pre-wrap">{{ item.answer_text }}</p>
+    {% else %}
+      <p class="muted" style="margin-top:10px">Текстовый ответ отсутствует.</p>
+    {% endif %}
+    {% if item.attached_file %}
+      <div style="margin-top:10px">
+        <span class="muted">Файл:</span> <a href="{{ item.attached_file.url }}" target="_blank">{{ item.attached_file.name }}</a>
+      </div>
+    {% endif %}
+  </div>
+
+  <div style="margin-top:14px">
+    <p>Статус: <span class="badge status-{{ item.status|lower }}">{{ item.status }}</span></p>
+    <p class="muted">Комментарий: {{ item.admin_comment|default:'—' }}</p>
+  </div>
+
+  <form method="post" style="margin-top:14px">
+    {% csrf_token %}
+    <label>Статус</label>
+    <select name="status" class="input">
+      <option value="reviewing">На проверке</option>
+      <option value="accepted">Принято</option>
+      <option value="needs_revision">Нужно доработать</option>
+    </select>
+    <label style="margin-top:12px">Комментарий</label>
+    <textarea name="admin_comment" class="input" rows="4">{{ item.admin_comment }}</textarea>
+    <button class="btn" style="margin-top:12px" type="submit">Сохранить</button>
+  </form>
+</div>
+{% endblock %}

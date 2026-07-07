@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="glass" style="max-width:520px;margin:60px auto;padding:24px;border-radius:14px">
+  <h2>Регистрация ученика</h2>
+  {% if messages %}{% for message in messages %}<p class="flash">{{ message }}</p>{% endfor %}{% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <div style="margin:10px 0"><label>Имя</label><div><input type="text" name="name" required class="input" /></div></div>
+    <div style="margin:10px 0"><label>Email</label><div><input type="email" name="email" required class="input" /></div></div>
+    <div style="margin:10px 0"><label>Пароль</label><div><input type="password" name="password1" required class="input" /></div></div>
+    <div style="margin:10px 0"><label>Повтор пароля</label><div><input type="password" name="password2" required class="input" /></div></div>
+    <button type="submit" class="btn">Создать аккаунт</button>
+  </form>
+  <p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p>
+</div>
+{% endblock %}

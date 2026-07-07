@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px">
+  <div>
+    <h1 class="brand" style="font-size:1.8rem">Панель администратора</h1>
+    <p class="muted">Управление обучением</p>
+  </div>
+</div>
+<div class="stat-grid cards-hover">
+  <div class="card">
+    <a href="{% url 'admin_students' %}" class="muted" style="text-decoration:none"><div class="muted">Ученики</div></a>
+    <a href="{% url 'admin_students' %}" style="text-decoration:none"><div class="brand" style="font-size:1.6rem;margin-top:6px">{{ students_count }}</div></a>
+  </div>
+  <div class="card">
+    <div class="muted">Программы</div>
+    <div class="brand" style="font-size:1.6rem;margin-top:6px">{{ courses_count }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">Уроки</div>
+    <div class="brand" style="font-size:1.6rem;margin-top:6px">{{ lessons_count }}</div>
+  </div>
+  <div class="card">
+    <div class="muted">На проверке</div>
+    <div class="brand" style="font-size:1.6rem;margin-top:6px">{{ pending_count }}</div>
+  </div>
+</div>
+<div class="glass" style="margin-top:22px;padding:18px;display:flex;gap:14px;flex-wrap:wrap">
+  <a class="btn" href="{% url 'admin_courses' %}">Программы</a>
+  <a class="btn" href="{% url 'admin_lessons' %}">Материалы</a>
+  <a class="btn" href="{% url 'assignments' %}">Проверка</a>
+</div>
+{% endblock %}

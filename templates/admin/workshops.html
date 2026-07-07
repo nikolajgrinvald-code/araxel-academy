@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="glass" style="padding:18px">
+  <h2>Workshops</h2>
+  {% if workshops %}
+    <ul>
+      {% for w in workshops %}
+        <li>{{ w.title }} <span class="badge">{{ w.pricing }}</span></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Пока пусто.</p>
+  {% endif %}
+  <p><a href="{% url 'workshop_list' %}">К списку workshops</a></p>
+  <p><a href="{% url 'admin_workshops' %}">Админ workshops</a></p>
+</div>
+{% endblock %}

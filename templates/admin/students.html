@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px">
+  <div>
+    <h1 class="brand" style="font-size:1.8rem">Ученики</h1>
+    <p class="muted">Всего: {{ students.count }}</p>
+  </div>
+  <form method="get" class="input" style="max-width:320px">
+    <input type="text" name="q" value="{{ q|default:'' }}" placeholder="Поиск по имени или email...">
+  </form>
+</div>
+<div class="list-grid">
+  {% for s in students %}
+    <div class="card">
+      <div style="font-weight:700">{{ s.name|default:s.email }}</div>
+      <div class="muted">{{ s.email }}</div>
+      <div style="margin-top:10px">
+        <a href="{% url 'admin_student_detail' s.pk %}" class="btn">Профиль</a>
+      </div>
+    </div>
+  {% empty %}
+    <div class="muted">Пока нет учеников.</div>
+  {% endfor %}
+</div>
+{% endblock %}

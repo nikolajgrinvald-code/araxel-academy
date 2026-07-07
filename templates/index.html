@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="hero">
+  <div>
+    <div class="card" style="padding:28px 30px">
+      <div class="muted" style="letter-spacing:0.2em;text-transform:uppercase;font-size:0.92rem">Тайная академия</div>
+      <h1 class="brand" style="font-size:3rem;margin:8px 0 14px">ARAXEL Academy</h1>
+      <p style="font-size:1.15rem;color:#e3ddd3">
+        Закрытая обучающая программа для тех, кто изучает эзотерику системно: структура, практика, проверка и mentorships.
+      </p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:18px">
+        <a href="{% url 'register' %}" class="btn">Начать обучение</a>
+        <a href="{% url 'login' %}" class="btn btn-accent">Войти в академию</a>
+      </div>
+      <div class="stat-grid" style="margin-top:22px">
+        <div class="card-soft" style="padding:16px">
+          <div class="brand" style="font-size:1.4rem">Программы</div>
+          <div class="muted">Учебные траектории</div>
+        </div>
+        <div class="card-soft" style="padding:16px">
+          <div class="brand" style="font-size:1.4rem">Уроки</div>
+          <div class="muted">Практические модули</div>
+        </div>
+        <div class="card-soft" style="padding:16px">
+          <div class="brand" style="font-size:1.4rem">Проверка</div>
+          <div class="muted">Обратная связь</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <img class="hero-image" src="https://v3b.fal.media/files/b/0aa152d6/1TwAwjQOpVzDgTqzrNS_E_sdP3rX87.png" alt="Атмосфера академии">
+  </div>
+</div>
+{% endblock %}

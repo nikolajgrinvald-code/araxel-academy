@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="min-height:70vh;display:flex;align-items:center;justify-content:center;padding:24px 18px">
+  <div class="auth-card" style="width:100%;max-width:460px;padding:26px 28px">
+    <div class="brand" style="font-size:1.6rem">Регистрация</div>
+    <p class="muted" style="margin-top:6px">Создайте профиль ученика.</p>
+
+    <form method="post" style="margin-top:18px">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div>
+          <label>Имя</label>
+          {{ form.name }}
+          {{ form.name.errors }}
+        </div>
+        <div>
+          <label>Email</label>
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
+        <div>
+          <label>Пароль</label>
+          {{ form.password1 }}
+          {{ form.password1.errors }}
+        </div>
+        <div>
+          <label>Повтор пароля</label>
+          {{ form.password2 }}
+          {{ form.password2.errors }}
+        </div>
+        <button class="btn btn-accent" type="submit" style="width:100%">Зарегистрироваться</button>
+      </div>
+    </form>
+
+    <p class="muted" style="margin-top:14px;text-align:center">
+      Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

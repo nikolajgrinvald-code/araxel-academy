@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ARAXEL Academy</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="{% url 'index' %}" class="nav-brand" aria-label="ARAXEL Academy">
+        <div class="nav-logo-wrap">
+          <img src="{% static 'img/logo.jpg' %}" alt="ARAXEL Academy" class="nav-logo">
+        </div>
+        <span class="nav-title">ARAXEL Academy</span>
+      </a>
+      {% if user.is_authenticated %}
+        {% if user.role == 'admin' %}
+          <a href="{% url 'admin_courses' %}">Программы</a>
+          <a href="{% url 'admin_lessons' %}">Уроки</a>
+          <a href="{% url 'assignments' %}">Проверка</a>
+          <a href="{% url 'admin_students' %}">Ученики</a>
+        {% else %}
+          <a href="{% url 'dashboard' %}">Кабинет</a>
+          <a href="{% url 'my_enrollments' %}">Программы</a>
+          <a href="{% url 'my_submissions' %}">Практика</a>
+        {% endif %}
+        <form method="post" action="{% url 'logout' %}" style="margin-left:auto">
+          {% csrf_token %}
+          <button class="btn btn-dark" type="submit">Выход</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}" class="btn btn-dark">Вход</a>
+        <a href="{% url 'register' %}" class="btn">Регистрация</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main>
+    {% if messages %}
+      <div style="margin-bottom:18px">
+        {% for msg in messages %}
+          <div class="alert">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

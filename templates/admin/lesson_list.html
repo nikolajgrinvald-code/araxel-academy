@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px">
+  <div>
+    <h1 class="brand" style="font-size:1.8rem">Материалы</h1>
+    <p class="muted">Уроки программ</p>
+  </div>
+  <a class="btn btn-accent" href="{% url 'admin_lesson_create' %}">Новый урок</a>
+</div>
+<div style="display:grid;gap:12px">
+  {% for l in lessons %}
+    <div class="card" style="display:flex;justify-content:space-between;gap:18px;align-items:center">
+      <div>
+        <strong>{{ l.course.title }}</strong> — {{ l.title }}
+        <span class="badge" style="margin-left:8px">{{ l.status }}</span>
+      </div>
+      <div style="display:flex;gap:10px">
+        <a class="btn" href="{% url 'admin_lesson_edit' l.id %}">Ред.</a>
+        <a class="btn" href="{% url 'admin_lesson_delete' l.id %}" style="background:#9a2c2c">Удалить</a>
+      </div>
+    </div>
+  {% empty %}
+    <p class="muted">Пока пусто.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="card" style="padding:0;overflow:hidden;margin-bottom:18px">
+  <img class="course-card-img" style="height:220px" src="{% if course.cover_image %}{{ course.cover_image.url }}{% else %}https://v3b.fal.media/files/b/0aa152d6/1TwAwjQOpVzDgTqzrNS_E_sdP3rX87.png{% endif %}" alt="{{ course.title }}">
+  <div style="padding:20px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap">
+      <div>
+        <h1 class="brand" style="font-size:1.9rem">{{ course.title }}</h1>
+        <p class="muted" style="margin-top:6px;max-width:760px">{{ course.description }}</p>
+      </div>
+      <span class="badge">{{ course.status }}</span>
+    </div>
+  </div>
+</div>
+
+<h2 class="brand" style="font-size:1.3rem;margin:22px 0 10px">Уроки программы</h2>
+<div class="list-grid">
+  {% for lesson in lessons %}
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <div class="brand" style="font-size:1.1rem">Урок {{ lesson.order_number }}. {{ lesson.title }}</div>
+          <p class="muted" style="margin-top:6px">{{ lesson.short_description|default:'' }}</p>
+        </div>
+        <a href="{% url 'lesson_detail' course.pk lesson.pk %}" class="btn btn-dark" style="padding:10px 14px">Открыть</a>
+      </div>
+    </div>
+  {% empty %}
+    <div class="muted">Уроков пока нет.</div>
+  {% endfor %}
+</div>
+{% endblock %}

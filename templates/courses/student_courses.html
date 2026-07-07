@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px">
+  <div>
+    <h1 class="brand" style="font-size:1.9rem">Программы обучения</h1>
+    <p class="muted">Выберите trajectory и начните путь внутри академии.</p>
+  </div>
+  <form method="get" class="card-soft" style="padding:10px 12px;max-width:320px">
+    <input type="text" name="q" value="{{ q|default:'' }}" placeholder="Поиск программ..." class="input">
+  </form>
+</div>
+<div class="list-grid">
+  {% for c in courses %}
+    <div class="card" style="padding:0;overflow:hidden">
+      <img class="course-card-img" src="{% if c.cover_image %}{{ c.cover_image.url }}{% else %}https://v3b.fal.media/files/b/0aa152d6/1TwAwjQOpVzDgTqzrNS_E_sdP3rX87.png{% endif %}" alt="{{ c.title }}">
+      <div style="padding:16px">
+        <div style="font-weight:700;font-size:1.1rem">{{ c.title }}</div>
+        <p class="muted" style="margin-top:6px">{{ c.description|truncatechars:100 }}</p>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <span class="badge">{{ c.status }}</span>
+          <a href="{% url 'course_detail' c.pk %}" class="btn btn-dark" style="padding:10px 14px">Открыть программу</a>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="muted">Программ пока нет.</div>
+  {% endfor %}
+</div>
+{% endblock %}

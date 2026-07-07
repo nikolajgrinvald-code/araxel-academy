@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="brand" style="font-size:1.8rem">{% if obj %}Редактирование{% else %}Новый урок{% endif %}</h1>
+<div class="glass" style="padding:22px;border-radius:16px;margin-top:12px">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Сохранить</button>
+  </form>
+</div>
+{% endblock %}

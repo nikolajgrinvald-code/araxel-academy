@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:18px">
+  <div>
+    <h1 class="brand" style="font-size:1.8rem">Проверка заданий</h1>
+    <p class="muted">Статусы и комментарии к ответам</p>
+  </div>
+</div>
+<div style="display:grid;gap:12px">
+  {% for i in items %}
+    <a href="{% url 'assignment_detail' i.id %}" class="card" style="display:flex;justify-content:space-between;gap:18px;align-items:center">
+      <div>
+        <strong>{{ i.student }}</strong>
+        <div class="muted">{{ i.lesson }}</div>
+      </div>
+      <span class="badge status-{{ i.status|lower }}">{{ i.status }}</span>
+    </a>
+  {% empty %}
+    <p class="muted">Пока пусто.</p>
+  {% endfor %}
+</div>
+{% endblock %}
