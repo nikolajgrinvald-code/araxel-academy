@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="glass" style="max-width:520px;margin:40px auto;padding:24px;border-radius:14px">
+  <h2>Выдать доступ к курсу</h2>
+  <p class="muted">Курс: {{ course.title }}</p>
+
+  {% if messages %}
+    {% for message in messages %}
+      <p class="flash">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <div style="margin:12px 0">
+      <label>ID или email ученика</label>
+      <input type="text" name="student_id" class="input" placeholder="например 5 или pupil@example.com" required />
+    </div>
+    <button class="btn btn-accent" type="submit" style="width:100%">Выдать доступ</button>
+  </form>
+</div>
+{% endblock %}
