@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'local-unsafe-secret')
-DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '1') == '1'
 _env_hosts = os.environ.get('DJANGO_ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [h.strip() for h in _env_hosts.split(',') if h.strip()] or ['*']
 _csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
