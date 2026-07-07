@@ -37,5 +37,5 @@ def revoke_access(request, pk):
 def my_enrollments(request):
     if request.user.role == 'admin':
         return redirect('dashboard')
-    enrollments = request.user.enrollments.select_related('course').all()
+    enrollments = request.user.course_enrollments.select_related('course').all()
     return render(request, 'enrollments/my.html', {'enrollments': enrollments})
