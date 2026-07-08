@@ -51,6 +51,12 @@ urlpatterns = [
     path('homework/', include('homework.urls')),
     path('media/<path:path>', media_proxy, name='media_proxy'),
     path('', user_views.index, name='index'),
+    path('_debug/storage/', lambda r: __import__('django.http').http.JsonResponse({
+        'DEFAULT_FILE_STORAGE': settings.DEFAULT_FILE_STORAGE,
+        'MEDIA_URL': settings.MEDIA_URL,
+        'R2_ACCESS_KEY_ID': bool(settings.AWS_ACCESS_KEY_ID),
+        'R2_BUCKET_NAME': settings.AWS_STORAGE_BUCKET_NAME,
+    })),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'static')
