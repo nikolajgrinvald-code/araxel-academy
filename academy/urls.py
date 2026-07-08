@@ -5,6 +5,9 @@ from django.urls import path, include
 from users import views as user_views
 from django.http import FileResponse, Http404
 from urllib.parse import unquote
+import logging
+
+logger = logging.getLogger('media_proxy')
 
 
 def media_proxy(request, path):
@@ -24,6 +27,7 @@ def media_proxy(request, path):
         mime = 'image/png'
 
     object_path = unquote(path)
+    logger.info('PROXY REQUEST path="%s"', object_path)
     try:
         import boto3
         client = boto3.client(
@@ -34,8 +38,10 @@ def media_proxy(request, path):
             region_name=getattr(settings, 'AWS_S3_REGION_NAME', 'us-east-1'),
         )
         obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_path)
+        logger.info('PROXY OK path="%s"', object_path)
         return FileResponse(obj['Body'], content_type=obj.get('ContentType', mime))
-    except Exception:
+    except Exception as e:
+        logger.info('PROXY MISS path="%s" error="%s"', object_path, repr(e))
         raise Http404()
 
 
@@ -47,19 +53,14 @@ urlpatterns = [
     path('homework/', include('homework.urls')),
     path('media/<path:path>', media_proxy, name='media_proxy'),
     path('', user_views.index, name='index'),
-    path('_debug/storage/', lambda request: __import__('django.http').http.JsonResponse((lambda c: {
+    path('_debug/storage/', lambda request: __import__('django.http').http.JsonResponse({
         'DEFAULT_FILE_STORAGE': settings.DEFAULT_FILE_STORAGE,
         'MEDIA_URL': settings.MEDIA_URL,
         'AWS_ACCESS_KEY_ID': bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None)),
         'AWS_STORAGE_BUCKET_NAME': settings.AWS_STORAGE_BUCKET_NAME,
         'AWS_S3_ENDPOINT_URL': settings.AWS_S3_ENDPOINT_URL,
         'AWS_S3_REGION_NAME': settings.AWS_S3_REGION_NAME,
-        'r2_write_test': (lambda:
-            c.put_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key='_render_write_probe.txt', Body=b'probe')
-            or c.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key='_render_write_probe.txt')
-            or 'ok'
-        )(),
-    })(__import__('boto3').client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, endpoint_url=settings.AWS_S3_ENDPOINT_URL, region_name=settings.AWS_S3_REGION_NAME)))),
+    })),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'static')
