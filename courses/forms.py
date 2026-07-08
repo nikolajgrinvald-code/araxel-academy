@@ -40,4 +40,12 @@ class LessonForm(forms.ModelForm):
         files = self.files.getlist('extra_files')
         for f in files:
             LessonFile.objects.create(lesson=lesson, file=f)
+        if self.cleaned_data.get('video_file'):
+            lesson.video_file.save(
+                self.cleaned_data['video_file'].name,
+                self.cleaned_data['video_file'],
+                save=False,
+            )
+            if commit:
+                lesson.save(update_fields=['video_file'])
         return lesson
