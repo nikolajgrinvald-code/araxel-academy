@@ -34,9 +34,13 @@ def media_proxy(request, path):
             region_name=getattr(settings, 'AWS_S3_REGION_NAME', 'us-east-1'),
         )
         obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_path)
-        return FileResponse(obj['Body'], content_type=obj.get('ContentType', mime))
+        response = FileResponse(obj['Body'], content_type=obj.get('ContentType', mime))
+        response['X-Debug-Key'] = object_path
+        return response
     except Exception:
-        raise Http404()
+        response = FileResponse(open(__file__, 'rb'), status=404, content_type='text/plain')
+        response['X-Debug-Key-404'] = object_path
+        return response
 
 
 urlpatterns = [
