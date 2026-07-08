@@ -34,13 +34,9 @@ def media_proxy(request, path):
             region_name=getattr(settings, 'AWS_S3_REGION_NAME', 'us-east-1'),
         )
         obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_path)
-        response = FileResponse(obj['Body'], content_type=obj.get('ContentType', mime))
-        response['X-Debug-Key'] = object_path
-        return response
+        return FileResponse(obj['Body'], content_type=obj.get('ContentType', mime))
     except Exception:
-        response = FileResponse(open(__file__, 'rb'), status=404, content_type='text/plain')
-        response['X-Debug-Key-404'] = object_path
-        return response
+        raise Http404()
 
 
 urlpatterns = [
@@ -51,11 +47,13 @@ urlpatterns = [
     path('homework/', include('homework.urls')),
     path('media/<path:path>', media_proxy, name='media_proxy'),
     path('', user_views.index, name='index'),
-    path('_debug/storage/', lambda r: __import__('django.http').http.JsonResponse({
+    path('_debug/storage/', lambda request: __import__('django.http').http.JsonResponse({
         'DEFAULT_FILE_STORAGE': settings.DEFAULT_FILE_STORAGE,
         'MEDIA_URL': settings.MEDIA_URL,
-        'R2_ACCESS_KEY_ID': bool(settings.AWS_ACCESS_KEY_ID),
-        'R2_BUCKET_NAME': settings.AWS_STORAGE_BUCKET_NAME,
+        'AWS_ACCESS_KEY_ID': bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None)),
+        'AWS_STORAGE_BUCKET_NAME': settings.AWS_STORAGE_BUCKET_NAME,
+        'AWS_S3_ENDPOINT_URL': settings.AWS_S3_ENDPOINT_URL,
+        'AWS_S3_REGION_NAME': settings.AWS_S3_REGION_NAME,
     })),
 ]
 if settings.DEBUG:
