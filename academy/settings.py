@@ -91,7 +91,11 @@ if os.environ.get('R2_ACCESS_KEY_ID'):
     AWS_STORAGE_BUCKET_NAME = os.environ.get('R2_BUCKET_NAME', 'araxel-academy-media')
     AWS_S3_ENDPOINT_URL = os.environ.get('R2_ENDPOINT_URL', 'https://476e588ed6ead655049c6db00512ad0c.r2.cloudflarestorage.com')
     AWS_S3_REGION_NAME = os.environ.get('R2_REGION_NAME', 'us-east-1')
-    AWS_QUERYSTRING_AUTH = False
+    AWS_QUERYSTRING_AUTH = True
     AWS_S3_FILE_OVERWRITE = False
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    MEDIA_URL = os.environ.get('R2_MEDIA_URL', 'https://476e588ed6ead655049c6db00512ad0c.r2.cloudflarestorage.com/araxel-academy-media/')
+else:
+    MEDIA_URL = 'media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
