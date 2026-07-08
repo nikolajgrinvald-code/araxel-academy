@@ -47,14 +47,19 @@ urlpatterns = [
     path('homework/', include('homework.urls')),
     path('media/<path:path>', media_proxy, name='media_proxy'),
     path('', user_views.index, name='index'),
-    path('_debug/storage/', lambda request: __import__('django.http').http.JsonResponse({
+    path('_debug/storage/', lambda request: __import__('django.http').http.JsonResponse((lambda c: {
         'DEFAULT_FILE_STORAGE': settings.DEFAULT_FILE_STORAGE,
         'MEDIA_URL': settings.MEDIA_URL,
         'AWS_ACCESS_KEY_ID': bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None)),
         'AWS_STORAGE_BUCKET_NAME': settings.AWS_STORAGE_BUCKET_NAME,
         'AWS_S3_ENDPOINT_URL': settings.AWS_S3_ENDPOINT_URL,
         'AWS_S3_REGION_NAME': settings.AWS_S3_REGION_NAME,
-    })),
+        'r2_write_test': (lambda:
+            c.put_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key='_render_write_probe.txt', Body=b'probe')
+            or c.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key='_render_write_probe.txt')
+            or 'ok'
+        )(),
+    })(__import__('boto3').client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY, endpoint_url=settings.AWS_S3_ENDPOINT_URL, region_name=settings.AWS_S3_REGION_NAME)))),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'static')
