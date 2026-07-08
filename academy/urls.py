@@ -3,24 +3,27 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from users import views as user_views
+from django.http import FileResponse, Http404
+from urllib.parse import unquote
 
 
 def media_proxy(request, path):
     if not path:
         raise Http404()
-    ext = path.lower().split('.')[-1]
     mime = 'application/octet-stream'
-    if ext == 'mp4':
+    lower = path.lower()
+    if lower.endswith(('.mp4',)):
         mime = 'video/mp4'
-    elif ext == 'pdf':
+    elif lower.endswith(('.pdf',)):
         mime = 'application/pdf'
-    elif ext == 'pptx':
+    elif lower.endswith(('.pptx',)):
         mime = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'
-    elif ext in ('jpg', 'jpeg'):
+    elif lower.endswith(('.jpg', '.jpeg')):
         mime = 'image/jpeg'
-    elif ext == 'png':
+    elif lower.endswith(('.png',)):
         mime = 'image/png'
 
+    object_path = unquote(path)
     try:
         import boto3
         client = boto3.client(
@@ -30,12 +33,10 @@ def media_proxy(request, path):
             endpoint_url=getattr(settings, 'AWS_S3_ENDPOINT_URL', None),
             region_name=getattr(settings, 'AWS_S3_REGION_NAME', 'us-east-1'),
         )
-        obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=path)
+        obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_path)
+        return FileResponse(obj['Body'], content_type=obj.get('ContentType', mime))
     except Exception:
         raise Http404()
-
-    from django.http import FileResponse, Http404
-    return FileResponse(obj['Body'], content_type=obj.get('ContentType', mime))
 
 
 urlpatterns = [
