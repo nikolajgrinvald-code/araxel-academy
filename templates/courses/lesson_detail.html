@@ -33,7 +33,7 @@
       <source src="{{ lesson.video_file.url }}" type="audio/ogg">
     </audio>
   {% else %}
-    <video controls style="width:100%;border-radius:14px;background:#000" controlslist="nodownload" disablepictureinpicture>
+    <video controls style="width:100%;border-radius:14px;background:#000" controlslist="nodownload noremoteplayback" disablepictureinpicture>
       <source src="{{ lesson.video_file.url }}">
       Плеер не поддерживается.
     </video>
