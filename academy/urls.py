@@ -44,11 +44,17 @@ def media_proxy(request, path):
 
 def link_lesson_6(request):
     from courses.models import Lesson, LessonFile
+    import os
+    secret = request.GET.get('secret', '')
+    if secret != os.environ.get('DJANGO_SECRET_KEY', ''):
+        return __import__('django.http').http.JsonResponse({'error': 'forbidden'}, status=403)
     lesson = Lesson.objects.filter(pk=6).first()
     if not lesson:
         return __import__('django.http').http.JsonResponse({'error': 'lesson not found'}, status=404)
     lesson.video_file.name = 'lessons/videos/Часть 2 Языкастик.mp4'
     lesson.save(update_fields=['video_file'])
+    # Убрать старые файлы и добавить правильные
+    LessonFile.objects.filter(lesson=lesson).exclude(file='lessons/files/Лекция 1.pptx').delete()
     LessonFile.objects.get_or_create(lesson=lesson, file='lessons/files/Лекция 1.pptx', defaults={'file_type': 'pptx'})
     return __import__('django.http').http.JsonResponse({'video': lesson.video_file.name, 'file': lesson.files.first().file.name if lesson.files.exists() else None})
 
