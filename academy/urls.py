@@ -48,6 +48,14 @@ urlpatterns = [
     path('', user_views.index, name='index'),
 ]
 if settings.DEBUG:
+    from django.http import JsonResponse
+    def debug_error(request):
+        import traceback
+        try:
+            raise ValueError('debug endpoint')
+        except Exception:
+            return JsonResponse({'traceback': traceback.format_exc()}, status=500)
+    urlpatterns += [path('_debug/error/', debug_error)]
     urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'static')
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 else:
