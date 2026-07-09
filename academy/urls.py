@@ -44,10 +44,6 @@ def media_proxy(request, path):
 
 def link_lesson_6(request):
     from courses.models import Lesson, LessonFile
-    import os
-    secret = request.GET.get('secret', '')
-    if secret != os.environ.get('DJANGO_SECRET_KEY', ''):
-        return __import__('django.http').http.JsonResponse({'error': 'forbidden'}, status=403)
     lesson = Lesson.objects.filter(pk=6).first()
     if not lesson:
         return __import__('django.http').http.JsonResponse({'error': 'lesson not found'}, status=404)
