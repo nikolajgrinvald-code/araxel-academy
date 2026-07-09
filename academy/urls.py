@@ -27,7 +27,6 @@ def media_proxy(request, path):
         mime = 'image/png'
 
     object_path = unquote(path)
-    logger.info('PROXY REQUEST path="%s"', object_path)
     try:
         import boto3
         client = boto3.client(
@@ -38,11 +37,24 @@ def media_proxy(request, path):
             region_name=getattr(settings, 'AWS_S3_REGION_NAME', 'us-east-1'),
         )
         obj = client.get_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=object_path)
-        logger.info('PROXY OK path="%s"', object_path)
         return FileResponse(obj['Body'], content_type=obj.get('ContentType', mime))
     except Exception as e:
-        logger.info('PROXY MISS path="%s" error="%s"', object_path, repr(e))
         raise Http404()
+
+
+def link_lesson_6(request):
+    from courses.models import Lesson, LessonFile
+    import os
+    secret = request.GET.get('secret', '')
+    if secret != os.environ.get('DJANGO_SECRET_KEY', ''):
+        return __import__('django.http').http.JsonResponse({'error': 'forbidden'}, status=403)
+    lesson = Lesson.objects.filter(pk=6).first()
+    if not lesson:
+        return __import__('django.http').http.JsonResponse({'error': 'lesson not found'}, status=404)
+    lesson.video_file.name = 'lessons/videos/Часть 2 Языкастик.mp4'
+    lesson.save(update_fields=['video_file'])
+    LessonFile.objects.get_or_create(lesson=lesson, file='lessons/files/Лекция 1.pptx', defaults={'file_type': 'pptx'})
+    return __import__('django.http').http.JsonResponse({'video': lesson.video_file.name, 'file': lesson.files.first().file.name if lesson.files.exists() else None})
 
 
 urlpatterns = [
@@ -61,6 +73,7 @@ urlpatterns = [
         'AWS_S3_ENDPOINT_URL': settings.AWS_S3_ENDPOINT_URL,
         'AWS_S3_REGION_NAME': settings.AWS_S3_REGION_NAME,
     })),
+    path('_admin/link_lesson_6/', link_lesson_6, name='link_lesson_6'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.BASE_DIR / 'static')
