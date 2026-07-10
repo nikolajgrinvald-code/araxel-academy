@@ -34,4 +34,11 @@ class HomeworkSubmission(models.Model):
         ordering = ('-submitted_at',)
 
     def __str__(self):
-        return f'{self.student} -> {self.lesson}'
+        student = getattr(self, 'student_id', None)
+        lesson = getattr(self, 'lesson_id', None)
+        if student and lesson:
+            try:
+                return f'{self.student} -> {self.lesson}'
+            except Exception:
+                pass
+        return f'HomeworkSubmission #{self.pk or "new"}'

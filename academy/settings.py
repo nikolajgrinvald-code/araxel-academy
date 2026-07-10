@@ -5,7 +5,7 @@ from urllib.parse import urlparse
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'local-unsafe-secret')
-DEBUG = os.environ.get('DJANGO_DEBUG', '1') == '1'
+DEBUG = os.environ.get('DJANGO_DEBUG', '0') == '1'
 _env_hosts = os.environ.get('DJANGO_ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [h.strip() for h in _env_hosts.split(',') if h.strip()] or ['*']
 _csrf_origins = os.environ.get('CSRF_TRUSTED_ORIGINS', '')
@@ -99,4 +99,26 @@ if os.environ.get('R2_ACCESS_KEY_ID'):
 else:
     MEDIA_URL = 'media/'
     MEDIA_ROOT = BASE_DIR / 'media'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+    },
+}
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
